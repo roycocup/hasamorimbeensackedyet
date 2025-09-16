@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Has Amorim Been Sacked Yet?</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .stopwatch {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .answer {
+            font-size: 2em;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .not-yet {
+            color: #ff4444;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .yes-answer {
+            display: none;
+            color: #44ff44;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(20);
+                opacity: 0;
+            }
+        }
+
+        .show-yes {
+            display: block !important;
+        }
+
+        .show-fireworks {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Has Amorim Been Sacked Yet?</h1>
+        
+        <div class="stopwatch" id="stopwatch">
+            <div id="time-display">Loading...</div>
+        </div>
+        
+        <div class="answer not-yet" id="not-yet">Not yet</div>
+        <div class="answer yes-answer" id="yes-answer">Yes!</div>
+    </div>
+
+    <div class="fireworks" id="fireworks"></div>
+
+    <script>
+        // Start date: November 1st, 2024
+        const startDate = new Date('2024-11-01T00:00:00Z');
+        
+        function updateStopwatch() {
+            const now = new Date();
+            const timeDiff = now - startDate;
+            
+            // Calculate time components
+            const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+            
+            // Format the display
+            const timeString = `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+            
+            document.getElementById('time-display').textContent = timeString;
+        }
+        
+        function createFirework(x, y, color) {
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            firework.style.left = x + 'px';
+            firework.style.top = y + 'px';
+            firework.style.backgroundColor = color;
+            firework.style.boxShadow = `0 0 20px ${color}`;
+            
+            document.getElementById('fireworks').appendChild(firework);
+            
+            // Remove firework after animation
+            setTimeout(() => {
+                if (firework.parentNode) {
+                    firework.parentNode.removeChild(firework);
+                }
+            }, 1000);
+        }
+        
+        function showFireworks() {
+            const colors = ['#ff4444', '#44ff44', '#4444ff', '#ffff44', '#ff44ff', '#44ffff'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    createFirework(x, y, color);
+                }, i * 100);
+            }
+        }
+        
+        function showYesAnswer() {
+            document.getElementById('not-yet').style.display = 'none';
+            document.getElementById('yes-answer').classList.add('show-yes');
+            document.getElementById('fireworks').classList.add('show-fireworks');
+            showFireworks();
+        }
+        
+        // Update stopwatch every second
+        updateStopwatch();
+        setInterval(updateStopwatch, 1000);
+        
+        // Function to trigger the "Yes!" answer and fireworks
+        // This can be called programmatically when needed
+        window.showAmorimSacked = showYesAnswer;
+        
+        // Example: Uncomment the line below to test the "Yes!" answer
+        // setTimeout(showYesAnswer, 5000);
+    </script>
+</body>
+</html>
